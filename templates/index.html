@@ -1,0 +1,94 @@
+{% extends "_layout.html" %}
+{% block content %}
+<h1 class="mb-4">Welcome to the Student Community Hub</h1>
+
+<div class="row g-4">
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header fw-bold">Latest Study Materials</div>
+      <ul class="list-group list-group-flush">
+        {% for m in materials %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <div class="fw-semibold">{{ m.title }}</div>
+              <div class="small text-muted">{{ m.description or '' }}</div>
+            </div>
+            <a class="btn btn-sm btn-outline-primary" href="{{ url_for('uploaded_file', filename=m.filename) }}" target="_blank">Open</a>
+          </li>
+        {% else %}
+          <li class="list-group-item">No materials yet.</li>
+        {% endfor %}
+      </ul>
+      <div class="card-footer text-end"><a href="{{ url_for('materials') }}">View all</a></div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header fw-bold">Latest Surveys</div>
+      <ul class="list-group list-group-flush">
+        {% for s in surveys %}
+          <li class="list-group-item">
+            <div class="fw-semibold">{{ s.question }}</div>
+            <div class="small text-muted">by {{ s.created_by or 'Anonymous' }}</div>
+          </li>
+        {% else %}
+          <li class="list-group-item">No surveys yet.</li>
+        {% endfor %}
+      </ul>
+      <div class="card-footer text-end"><a href="{{ url_for('surveys') }}">Participate</a></div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header fw-bold">Q/A</div>
+      <ul class="list-group list-group-flush">
+        {% for q in questions %}
+          <li class="list-group-item">
+            <div class="fw-semibold">{{ q.text[:100] }}{% if q.text|length > 100 %}...{% endif %}</div>
+            <div class="small text-muted">by {{ q.asked_by or 'Anonymous' }}</div>
+          </li>
+        {% else %}
+          <li class="list-group-item">No questions yet.</li>
+        {% endfor %}
+      </ul>
+      <div class="card-footer text-end"><a href="{{ url_for('qa') }}">Ask / Reply</a></div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header fw-bold">Tech News</div>
+      <ul class="list-group list-group-flush">
+        {% for n in news %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <a href="{{ n.link }}" target="_blank">{{ n.title }}</a>
+            <span class="small text-muted">{{ n.posted_by or 'Anonymous' }}</span>
+          </li>
+        {% else %}
+          <li class="list-group-item">No news yet.</li>
+        {% endfor %}
+      </ul>
+      <div class="card-footer text-end"><a href="{{ url_for('tech') }}">Post / View</a></div>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="card h-100">
+      <div class="card-header fw-bold">Announcements</div>
+      <ul class="list-group list-group-flush">
+        {% for a in announcements %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>{{ a.text }}</div>
+            <span class="small text-muted">{{ a.posted_by or 'Admin' }}</span>
+          </li>
+        {% else %}
+          <li class="list-group-item">No announcements yet.</li>
+        {% endfor %}
+      </ul>
+      <div class="card-footer text-end"><a href="{{ url_for('announcements') }}">Post / View</a></div>
+    </div>
+  </div>
+</div>
+{% endblock %}

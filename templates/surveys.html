@@ -1,0 +1,71 @@
+{% extends "_layout.html" %}
+{% block content %}
+<h2 class="mb-3">Surveys</h2>
+
+<div class="row g-4">
+  <div class="col-md-5">
+    <div class="card">
+      <div class="card-header fw-bold">Create Survey</div>
+      <div class="card-body">
+        <form method="post">
+          <div class="mb-3">
+            <label class="form-label">Question</label>
+            <input name="question" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Options (min 2)</label>
+            <input name="options" class="form-control mb-2" placeholder="Option 1" required>
+            <input name="options" class="form-control mb-2" placeholder="Option 2" required>
+            <div id="moreOptions"></div>
+            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="addOption()">+ Add option</button>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Your Name (optional)</label>
+            <input name="created_by" class="form-control">
+          </div>
+          <button class="btn btn-primary">Create</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-7">
+    {% for s in surveys %}
+      <div class="card mb-3">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <div>
+            <div class="fw-bold">{{ s.question }}</div>
+            <div class="small text-muted">by {{ s.created_by or 'Anonymous' }} • {{ s.created_at.strftime('%Y-%m-%d %H:%M') }}</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <form method="post" action="{{ url_for('vote_survey', survey_id=s.id) }}">
+            {% for opt in s.options %}
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="option_id" id="opt{{ opt.id }}" value="{{ opt.id }}" required>
+                <label class="form-check-label" for="opt{{ opt.id }}">
+                  {{ opt.text }} — <span class="text-muted">{{ opt.votes }} votes</span>
+                </label>
+              </div>
+            {% endfor %}
+            <button class="btn btn-sm btn-success mt-2">Vote</button>
+          </form>
+        </div>
+      </div>
+    {% else %}
+      <div class="alert alert-secondary">No surveys yet.</div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+function addOption() {
+  const div = document.getElementById('moreOptions');
+  const input = document.createElement('input');
+  input.name = 'options';
+  input.placeholder = 'Another option';
+  input.className = 'form-control mb-2';
+  div.appendChild(input);
+}
+</script>
+{% endblock %}

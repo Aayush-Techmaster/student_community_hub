@@ -1,0 +1,45 @@
+{% extends "_layout.html" %}
+{% block content %}
+<h2 class="mb-3">Tech News (Student-submitted)</h2>
+
+<div class="row g-4">
+  <div class="col-md-5">
+    <div class="card">
+      <div class="card-header fw-bold">Post Tech News</div>
+      <div class="card-body">
+        <form method="post">
+          <div class="mb-3">
+            <label class="form-label">Title</label>
+            <input name="title" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Link</label>
+            <input name="link" type="url" class="form-control" placeholder="https://example.com/article" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Your Name (optional)</label>
+            <input name="posted_by" class="form-control">
+          </div>
+          <button class="btn btn-primary">Post</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-7">
+    <div class="card">
+      <div class="card-header fw-bold">Latest Tech News</div>
+      <ul class="list-group list-group-flush">
+        {% for n in items %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <a href="{{ n.link }}" target="_blank">{{ n.title }}</a>
+            <span class="small text-muted">{{ n.posted_by or 'Anonymous' }}</span>
+          </li>
+        {% else %}
+          <li class="list-group-item">No tech news yet.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

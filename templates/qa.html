@@ -1,0 +1,54 @@
+{% extends "_layout.html" %}
+{% block content %}
+<h2 class="mb-3">Q/A Forum</h2>
+
+<div class="card mb-4">
+  <div class="card-header fw-bold">Ask a Question</div>
+  <div class="card-body">
+    <form method="post">
+      <div class="mb-3">
+        <label class="form-label">Your Question</label>
+        <textarea name="text" class="form-control" rows="3" required></textarea>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Your Name (optional)</label>
+        <input name="asked_by" class="form-control">
+      </div>
+      <button class="btn btn-primary">Post Question</button>
+    </form>
+  </div>
+</div>
+
+{% for q in questions %}
+  <div class="card mb-3">
+    <div class="card-header">
+      <div class="fw-bold">{{ q.text }}</div>
+      <div class="small text-muted">by {{ q.asked_by or 'Anonymous' }} • {{ q.created_at.strftime('%Y-%m-%d %H:%M') }}</div>
+    </div>
+    <div class="card-body">
+      <h6>Replies</h6>
+      <ul class="list-group list-group-flush mb-3">
+        {% for a in q.answers %}
+          <li class="list-group-item">
+            <div>{{ a.text }}</div>
+            <div class="small text-muted">— {{ a.replied_by or 'Anonymous' }}, {{ a.created_at.strftime('%Y-%m-%d %H:%M') }}</div>
+          </li>
+        {% else %}
+          <li class="list-group-item">No replies yet.</li>
+        {% endfor %}
+      </ul>
+      <form method="post" action="{{ url_for('answer', question_id=q.id) }}">
+        <div class="mb-2">
+          <input name="text" class="form-control" placeholder="Write a reply..." required>
+        </div>
+        <div class="mb-2">
+          <input name="replied_by" class="form-control" placeholder="Your name (optional)">
+        </div>
+        <button class="btn btn-sm btn-outline-primary">Reply</button>
+      </form>
+    </div>
+  </div>
+{% else %}
+  <div class="alert alert-secondary">No questions yet.</div>
+{% endfor %}
+{% endblock %}
